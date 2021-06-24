@@ -1,0 +1,89 @@
+<div class="container">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="name">Name: </label>
+                <input id="name" class="form-control" type="text" formControlName="name">
+                <div *ngIf="registerForm.controls['name'].invalid && (registerForm.controls['name'].dirty || registerForm.controls['name'].touched)"
+                    class="text-danger">
+                    <div *ngIf="registerForm.controls['name'].errors.required">
+                        Please enter name
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="pic">Profile Photo: </label>
+                <input id="pic" class="form-control" type="file" formControlName="pic" (change)="onFileChange($event)">
+                <div *ngIf="registerForm.controls['pic'].invalid && (registerForm.controls['pic'].dirty || registerForm.controls['pic'].touched)"
+                    class="text-danger">
+                    <div *ngIf="registerForm.controls['pic'].errors.required">
+                        Please select photo
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="userType">User Type: </label>
+                <select class="form-control" name="userType" id="userType" formControlName="userType">
+                    <option value="">-- Select --</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+                <div *ngIf="registerForm.controls['userType'].invalid && (registerForm.controls['userType'].dirty || registerForm.controls['userType'].touched)"
+                    class="text-danger">
+                    <div *ngIf="registerForm.controls['userType'].errors.required">
+                        Please select user type
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="email">Email: </label>
+                <input id="email" class="form-control" type="text" formControlName="email">
+                <div *ngIf="registerForm.controls['email'].invalid && (registerForm.controls['email'].dirty || registerForm.controls['email'].touched)"
+                    class="text-danger">
+                    <div *ngIf="registerForm.controls['email'].errors.required">
+                        Please enter email
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="password">Password: </label>
+                <input id="password" class="form-control" type="password" formControlName="password">
+                <div *ngIf="registerForm.controls['password'].invalid && (registerForm.controls['password'].dirty || registerForm.controls['password'].touched)"
+                    class="text-danger">
+                    <div *ngIf="registerForm.controls['password'].errors.required">
+                        Please enter password
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" name="register" value="Register" [disabled]="!registerForm.valid">
+            </div>
+        </div>
+
+    </form>
+</div>

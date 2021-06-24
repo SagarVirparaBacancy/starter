@@ -1,0 +1,65 @@
+<div class="container">
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="email">Email: </label>
+                <input id="email" class="form-control" type="text" formControlName="email">
+                <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)"
+                    class="text-danger">
+                    <div *ngIf="loginForm.controls['email'].errors.required">
+                        Please enter email
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="password">Password: </label>
+                <input id="password" class="form-control" type="password" formControlName="password">
+                <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)"
+                    class="text-danger">
+                    <div *ngIf="loginForm.controls['password'].errors.required">
+                        Please enter password
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <input type="submit" class="btn btn-primary" name="submit" value="Login" [disabled]="!loginForm.valid">
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <input type="button" class="btn btn-primary" name="register" (click)="gotoRegister()"
+                    value="Register New Account">
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+    </form>
+
+    <br>
+
+    <div class="row">
+        <div class="col-md-3">
+            <a href="#" (click)="loginWithGoogle()">GOOGLE</a>
+        </div>
+        <div class="col-md-3">
+            <a href="#" (click)="loginWithFB()">FACEBOOK</a>
+        </div>
+    </div>
+
+</div>
