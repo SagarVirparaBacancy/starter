@@ -282,7 +282,7 @@ exports.getAllUserForDT = (req, res) => {
     async.waterfall([
         (callback) => {
             dtObj.draw = req.body.draw
-            
+
             let sort = {}
             if (req.body.order && req.body.order.length > 0) {
                 req.body.order = req.body.order[0]
@@ -307,24 +307,31 @@ exports.getAllUserForDT = (req, res) => {
 
             // isse with regex
             let searchRegex = new RegExp(req.body.search.value)
-            console.log("searchRegex", searchRegex)
+            // let searchRegex = ".*" + req.body.search.value + ".*"
+            // console.log("searchRegex", searchRegex)
 
             aggregateQuery.push({
                 $match: {
-                    $or: [{
-                        "name": {
-                            $regex: searchRegex,
-                            $options: 'i'
+                    $or: [
+                        {
+                            "name": {
+                                $regex: searchRegex,
+                                $options: 'i'
+                            }
                         },
-                        "email": {
-                            $regex: searchRegex,
-                            $options: 'i'
+                        {
+                            "email": {
+                                $regex: searchRegex,
+                                $options: 'i'
+                            }
                         },
-                        "userType": {
-                            $regex: searchRegex,
-                            $options: 'i'
+                        {
+                            "userType": {
+                                $regex: searchRegex,
+                                $options: 'i'
+                            }
                         }
-                    }]
+                    ]
                 }
             })
 
