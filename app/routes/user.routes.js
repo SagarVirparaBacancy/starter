@@ -28,4 +28,7 @@ module.exports = (app) => {
 
     // google login
     app.post('/auth/googleLogin', usersController.googleLogin)
+
+    // datatable
+    app.post('/user/getUserForDT', usersController.getAllUserForDT)
 }

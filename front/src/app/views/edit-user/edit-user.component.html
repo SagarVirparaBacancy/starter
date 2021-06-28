@@ -1,0 +1,61 @@
+<app-header></app-header>
+
+<div class="container">
+    <form [formGroup]="userEditForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="name">Name: </label>
+                <input id="name" class="form-control" type="text" formControlName="name">
+                <div *ngIf="userEditForm.controls['name'].invalid && (userEditForm.controls['name'].dirty || userEditForm.controls['name'].touched)"
+                    class="text-danger">
+                    <div *ngIf="userEditForm.controls['name'].errors.required">
+                        Please enter name
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="userType">User Type: </label>
+                <select class="form-control" name="userType" id="userType" formControlName="userType">
+                    <option value="">-- Select --</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+                <div *ngIf="userEditForm.controls['userType'].invalid && (userEditForm.controls['userType'].dirty || userEditForm.controls['userType'].touched)"
+                    class="text-danger">
+                    <div *ngIf="userEditForm.controls['userType'].errors.required">
+                        Please select user type
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="email">Email: </label>
+                <input id="email" class="form-control" type="text" formControlName="email">
+                <div *ngIf="userEditForm.controls['email'].invalid && (userEditForm.controls['email'].dirty || userEditForm.controls['email'].touched)"
+                    class="text-danger">
+                    <div *ngIf="userEditForm.controls['email'].errors.required">
+                        Please enter email
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" name="Edit" value="Edit" [disabled]="!userEditForm.valid">
+            </div>
+        </div>
+
+    </form>
+</div>

@@ -29,4 +29,9 @@ export class HeaderComponent implements OnInit {
   gotoUserList() {
     this.router.navigateByUrl('/user-list');
   }
+
+  gotoDashboard() {
+    this.router.navigateByUrl('/dashboard');
+  }
+
 }

@@ -16,6 +16,8 @@ import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig, So
 import { environment } from 'src/environments/environment';
 import { UserListComponent } from './views/user-list/user-list.component';
 import { AuthInterceptorInterceptor } from './helper/auth-interceptor.interceptor';
+import { DataTablesModule } from 'angular-datatables';
+import { EditUserComponent } from './views/edit-user/edit-user.component';
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import { AuthInterceptorInterceptor } from './helper/auth-interceptor.intercepto
     RegisterComponent,
     DashboardComponent,
     HeaderComponent,
-    UserListComponent
+    UserListComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ import { AuthInterceptorInterceptor } from './helper/auth-interceptor.intercepto
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(), // ToastrModule added,
-    SocialLoginModule
+    SocialLoginModule,
+    DataTablesModule
   ],
   providers: [
     {

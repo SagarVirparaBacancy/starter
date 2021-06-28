@@ -2,6 +2,7 @@ const User = require('../models/user.model')
 const jwt = require('jsonwebtoken');
 
 var crypto = require('crypto'), algorithm = 'aes-256-ctr', secretKey = process.env.SECRETKEY;
+const async = require("async");
 
 function encrypt(text) {
     var cipher = crypto.createCipher(algorithm, secretKey)
@@ -78,7 +79,8 @@ exports.updateUser = (req, res) => {
 
     User.findByIdAndUpdate(req.params.userId, {
         name: req.body.name,
-        email: req.body.email
+        email: req.body.email,
+        userType: req.body.userType
     }, { new: true })
         .then(user => {
             if (!user) {
@@ -268,10 +270,111 @@ exports.googleLogin = async (req, res) => {
 }
 
 
-// google social login
-// receive - id, provider, name, email
-// insert socialid, provider, name, email
-// generate jwt token and return
-// check if the user with same id exists then generate jwt token and return
-// else insert data and generate token
-// save authtoken in local
+exports.getAllUserForDT = (req, res) => {
+
+    var dtObj = {
+        "draw": 0,
+        "recordsTotal": 0,
+        "recordsFiltered": 0,
+        "data": []
+    }
+
+    async.waterfall([
+        (callback) => {
+            dtObj.draw = req.body.draw
+            
+            let sort = {}
+            if (req.body.order && req.body.order.length > 0) {
+                req.body.order = req.body.order[0]
+                sort[req.body.columns[req.body.order.column].data] = req.body.order.dir == 'asc' ? 1 : -1;
+            }
+            console.log("sort", sort)
+            callback(null, sort);
+        },
+        (sort, callback) => {
+            User.count().then(totalCount => {
+                dtObj.recordsTotal = totalCount
+                callback(null, sort)
+            }).catch(err => {
+                return res.status(500).send({
+                    status: 500,
+                    message: err.message || "Some error occurred."
+                });
+            })
+        },
+        (sort, callback) => {
+            let aggregateQuery = []
+
+            // isse with regex
+            let searchRegex = new RegExp(req.body.search.value)
+            console.log("searchRegex", searchRegex)
+
+            aggregateQuery.push({
+                $match: {
+                    $or: [{
+                        "name": {
+                            $regex: searchRegex,
+                            $options: 'i'
+                        },
+                        "email": {
+                            $regex: searchRegex,
+                            $options: 'i'
+                        },
+                        "userType": {
+                            $regex: searchRegex,
+                            $options: 'i'
+                        }
+                    }]
+                }
+            })
+
+            aggregateQuery.push({
+                $sort: sort
+            })
+
+            aggregateQuery.push({
+                $limit: Number(req.body.start) + Number(req.body.length)
+            })
+
+            aggregateQuery.push({
+                $skip: Number(req.body.start)
+            })
+
+            User.aggregate(aggregateQuery).then(result => {
+                callback(null, result)
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        (result, callback) => {
+            dtObj.data = result
+            dtObj.recordsFiltered = result.length
+            callback(null, dtObj)
+        }
+    ], function (err, result) {
+        // console.log("last--", dtObj)
+        if (err) {
+            return res.status(500).send({
+                status: 500,
+                message: err.message || "Some error occurred."
+            });
+        }
+        return res.status(200).send({
+            status: 200,
+            message: "Done.",
+            data: dtObj
+        })
+    });
+
+    // User.find().then(data => {
+    //     return res.status(200).send({
+    //         status: 200,
+    //         message: "Fetched successfully.",
+    //         data: data
+    //     })
+    // }).catch(err => {
+    //     return res.status(500).send({
+    //         message: err.message || "Some error occurred."
+    //     });
+    // })
+}

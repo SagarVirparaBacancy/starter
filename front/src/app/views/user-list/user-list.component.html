@@ -1,3 +1,28 @@
 <app-header></app-header>
 
-<p>user-list works!</p>
+<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>User Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="persons?.length != 0">
+      <tr *ngFor="let person of persons">
+        <td>{{ person.name }}</td>
+        <td>{{ person.email }}</td>
+        <td>{{ person.userType }}</td>
+        <td>
+          <button [routerLink]="['/edit-user', person._id]">Edit</button>
+          <button (click)="deleteUser(person._id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="persons?.length == 0">
+      <tr>
+        <td colspan="3" class="no-data-available">No data!</td>
+      </tr>
+    </tbody>
+  </table>

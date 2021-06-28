@@ -40,6 +40,7 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       this.authService.registerUser(formData).subscribe(data => {
         this.toastr.success(data.message)
+        this.router.navigateByUrl('/')
         // console.log(data)
       }, err => {
         this.toastr.error(err.error.message)

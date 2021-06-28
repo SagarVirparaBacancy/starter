@@ -34,9 +34,25 @@ export class AuthService {
   registerUser(data) {
     return this.http.post<any>(`${environment.APIURL}/auth/createUser`, data)
   }
-  
+
   googleLogin(data) {
     return this.http.post<any>(`${environment.APIURL}/auth/googleLogin`, data)
+  }
+
+  getUserListForDT(dataTablesParameters) {
+    return this.http.post<any>(`${environment.APIURL}/user/getUserForDT`, dataTablesParameters)
+  }
+
+  deleteUser(id) {
+    return this.http.delete<any>(`${environment.APIURL}/user/${id}`)
+  }
+
+  updateUser(id, data) {
+    return this.http.put<any>(`${environment.APIURL}/user/${id}`, data)
+  }
+
+  getUserById(id) {
+    return this.http.get<any>(`${environment.APIURL}/user/${id}`)
   }
 
 }
