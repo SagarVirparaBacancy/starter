@@ -1,4 +1,5 @@
 const User = require('../models/user.model')
+const Navigation = require('../models/navigation.model')
 const jwt = require('jsonwebtoken');
 
 var crypto = require('crypto'), algorithm = 'aes-256-ctr', secretKey = process.env.SECRETKEY;
@@ -49,13 +50,14 @@ exports.createUser = async (req, res) => {
             // Save in the database
             user.save()
                 .then(data => {
-                    res.status(200).send({
+                    return res.status(200).send({
                         status: 200,
                         message: "Created successfully.",
                         data: data
                     });
                 }).catch(err => {
-                    res.status(500).send({
+                    return res.status(500).send({
+                        status: 500,
                         message: err.message || "Some error occurred while creating."
                     });
                 });
@@ -89,13 +91,13 @@ exports.updateUser = (req, res) => {
                     message: "User not found."
                 });
             }
-            res.send({
+            return res.send({
                 status: 200,
                 message: "Updated successfully.",
                 data: user
             });
         }).catch(err => {
-            res.status(500).send({
+            return res.status(500).send({
                 status: 500,
                 message: "Error updating."
             });
@@ -133,7 +135,7 @@ exports.findUserById = (req, res) => {
                     message: "User not found."
                 });
             }
-            return res.send({
+            return res.status(200).send({
                 status: 200,
                 message: "Fetched successfully.",
                 data: user
@@ -173,17 +175,32 @@ exports.login = async (req, res) => {
         let fetchedUserData = await User.findOne({ email: req.body.email }).lean()
         if (fetchedUserData) {
             if (req.body.password == decrypt(fetchedUserData.password)) {
+                console.log("fetchedUserData", fetchedUserData)
+                Navigation.find({
+                    _id: {
+                        $in: fetchedUserData.navId
+                    }
+                }).then(result => {
+                    fetchedUserData['navigation'] = result
+                    console.log(fetchedUserData.navId)
 
-                jwt.sign({
-                    data: fetchedUserData
-                }, secretKey, { expiresIn: '1d' }, (err, token) => {
-                    fetchedUserData['token'] = token
-                    return res.status(200).send({
-                        status: 200,
-                        message: "Login successfully,",
+                    jwt.sign({
                         data: fetchedUserData
+                    }, secretKey, { expiresIn: '1d' }, (err, token) => {
+                        fetchedUserData['token'] = token
+                        return res.status(200).send({
+                            status: 200,
+                            message: "Login successfully,",
+                            data: fetchedUserData
+                        })
                     })
+
+                }).catch(err => {
+                    return res.status(500).send({
+                        message: err.message || "Some error occurred."
+                    });
                 })
+
 
             } else {
                 return res.status(400).send({
@@ -199,6 +216,7 @@ exports.login = async (req, res) => {
         }
     } catch (err) {
         return res.status(500).send({
+            status: 500,
             message: err.message || "Some error occurred."
         });
     }
@@ -350,7 +368,10 @@ exports.getAllUserForDT = (req, res) => {
             User.aggregate(aggregateQuery).then(result => {
                 callback(null, result)
             }).catch(err => {
-                console.log(err)
+                return res.status(500).send({
+                    status: 500,
+                    message: err.message || "Error occurred."
+                })
             })
         },
         (result, callback) => {

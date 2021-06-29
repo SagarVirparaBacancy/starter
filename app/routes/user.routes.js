@@ -1,5 +1,6 @@
 module.exports = (app) => {
     const usersController = require('../controllers/user.controller.js');
+    const navigationController = require('../controllers/rolepermission.controller')
     const middleware = require('../middleware/auth.middleware')
 
     const multer = require('multer')
@@ -31,4 +32,21 @@ module.exports = (app) => {
 
     // datatable
     app.post('/user/getUserForDT', usersController.getAllUserForDT)
+
+
+    // Navigation routes start
+    app.get('/auth/fetchAllNavigation', navigationController.fetchAllNavigation)
+    app.post('/auth/insertNewNavigation', navigationController.insertNewNavigation)
+    app.get('/auth/nav/:navId', navigationController.findNavigationById)
+    app.put('/auth/nav/:navId', navigationController.updateNavigation)
+    app.delete('/auth/nav/:navId', navigationController.deleteNavigation)
+
+    // premission
+    app.post('/auth/permission/insertNewPermission', navigationController.insertNewPermission)
+    app.get('/auth/permission/fetchAllPermission', navigationController.fetchAllPermission)
+    app.get('/auth/permission/:permissionId', navigationController.findPermissionById)
+    app.delete('/auth/permission/:permissionId', navigationController.deletePermission)
+    app.put('/auth/permission/:permissionId', navigationController.updatePermission)
+    
+
 }

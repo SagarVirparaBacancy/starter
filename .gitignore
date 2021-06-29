@@ -1,5 +1,7 @@
 /node_modules
 /front/node_modules
+/coreui/node_modules
 /uploads
 package-lock.json
 /front/package-lock.json
+/coreui/package-lock.json

@@ -7,7 +7,8 @@ const UserSchema = mongoose.Schema({
     pic: String,
     userType: String,
     socialid: String,
-    provider: String
+    provider: String,
+    navId: String
 }, {
     timestamps: true
 })
